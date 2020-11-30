@@ -6,6 +6,12 @@
 
   <ItemGroup>
     <PackageReference Include="Volo.Abp.AspNetCore.Mvc" Version="3.3.1" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\wf.abp.Application\wf.abp.Application.csproj" />
+    <ProjectReference Include="..\wf.abp.EntityFrameworkCore.DbMigrations\wf.abp.EntityFrameworkCore.DbMigrations.csproj" />
   </ItemGroup>
 
 
