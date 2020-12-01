@@ -21,6 +21,6 @@ namespace wf.abp.WebApi
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                });
+                }).UseAutofac();
     }
 }

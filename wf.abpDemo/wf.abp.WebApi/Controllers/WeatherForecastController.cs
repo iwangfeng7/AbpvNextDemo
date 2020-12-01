@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using wf.abp.Application.Contracts;
 
 namespace wf.abp.WebApi.Controllers
 {
@@ -17,15 +18,22 @@ namespace wf.abp.WebApi.Controllers
         };
 
         private readonly ILogger<WeatherForecastController> _logger;
+        private readonly IBookAppService _bookAppService;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger,IBookAppService bookAppService)
         {
             _logger = logger;
+            _bookAppService = bookAppService;
         }
 
         [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
+        public async Task<IEnumerable<WeatherForecast>> GetAsync()
         {
+            _ = await _bookAppService.CreateAsync(new CreateUpdateBookDto()
+            {
+                Name = "We0ather",
+                Price = 100L
+            });
             var rng = new Random();
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
