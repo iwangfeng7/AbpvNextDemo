@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using Volo.Abp;
 using Volo.Abp.AspNetCore.Mvc;
 using Volo.Abp.Autofac;
@@ -39,7 +40,11 @@ namespace wf.abp.WebApi
             app.UseRouting();
 
             app.UseAuthorization();
-
+            app.UseSwagger();
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "BookStore API");
+            });
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
@@ -52,8 +57,15 @@ namespace wf.abp.WebApi
             var configuration = context.Services.GetConfiguration();
 
             ConfigureAutoMapper();
-
+            ConfigureSwaggerServices(context.Services);
             context.Services.AddAutoMapperObjectMapper<WebApiModule>();
+
+            Configure<AbpAspNetCoreMvcOptions>(options =>
+            {
+                options
+                .ConventionalControllers
+                .Create(typeof(ApplicationModule).Assembly);
+            });
         }
 
         private void ConfigureAutoMapper()
@@ -62,6 +74,16 @@ namespace wf.abp.WebApi
             {
                 options.AddMaps<WebApiModule>();
             });
+        }
+        private void ConfigureSwaggerServices(IServiceCollection services)
+        {           
+            var configuration = services.GetConfiguration();
+            services.AddSwaggerGen(
+                options =>
+                {
+                    options.SwaggerDoc("v1", new OpenApiInfo { Title = "Products API", Version = "v1" });
+                    options.DocInclusionPredicate((docName, description) => true);
+                });
         }
     }
 }
